@@ -12,10 +12,11 @@ app.use('/api', rootRoute);
 
 app.get('/', (req: Request, res: Response) => {
     res.status(200).json({
-        'message': 'Success',
+        'message': 'Success Connect',
         'data': 'Hello World'
     });
 })
+
 
 app.listen(PORT, () => {
     console.log('Server run on port: ' + PORT);
