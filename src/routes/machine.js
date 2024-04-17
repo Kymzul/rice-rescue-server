@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.machineRoute = void 0;
+const express_1 = require("express");
+const machine_1 = require("../controller/machine");
+exports.machineRoute = (0, express_1.Router)();
+exports.machineRoute.get('/machine', machine_1.getMachines);
+exports.machineRoute.post('/machine', machine_1.postMachine);
+exports.machineRoute.delete('/machine/:machineID', machine_1.deleteMachine);
+exports.machineRoute.put('/machine/:machineID', machine_1.updateMachine);
+exports.default = exports.machineRoute;

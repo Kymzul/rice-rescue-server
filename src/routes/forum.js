@@ -1,0 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.forumRoute = void 0;
+const express_1 = require("express");
+const forum_1 = require("../controller/forum");
+exports.forumRoute = (0, express_1.Router)();
+exports.forumRoute.get('/forum', forum_1.getForums);
+exports.forumRoute.post('/forum', forum_1.postForum);
+exports.forumRoute.delete('/forum/:forumID', forum_1.deleteForum);
+exports.default = exports.forumRoute;

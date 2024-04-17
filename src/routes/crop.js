@@ -1,0 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.cropRoute = void 0;
+const express_1 = require("express");
+const crop_1 = require("../controller/crop");
+exports.cropRoute = (0, express_1.Router)();
+exports.cropRoute.get('/crop', crop_1.getCrops);
+exports.cropRoute.post('/crop', crop_1.postCrop);
+exports.cropRoute.delete('/crop/:cropID', crop_1.deleteCrop);
+exports.default = exports.cropRoute;

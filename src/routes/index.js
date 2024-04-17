@@ -1,0 +1,24 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const auth_1 = __importDefault(require("./auth"));
+const user_1 = __importDefault(require("./user"));
+const machine_1 = __importDefault(require("./machine"));
+const job_1 = __importDefault(require("./job"));
+const crop_1 = __importDefault(require("./crop"));
+const field_1 = __importDefault(require("./field"));
+const forum_1 = __importDefault(require("./forum"));
+const team_1 = __importDefault(require("./team"));
+const rootRoute = (0, express_1.Router)();
+rootRoute.use('/auth', auth_1.default);
+rootRoute.use(user_1.default);
+rootRoute.use(machine_1.default);
+rootRoute.use(job_1.default);
+rootRoute.use(crop_1.default);
+rootRoute.use(field_1.default);
+rootRoute.use(forum_1.default);
+rootRoute.use(team_1.default);
+exports.default = rootRoute;
