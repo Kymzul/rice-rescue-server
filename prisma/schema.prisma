@@ -1,0 +1,157 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum UserType {
+  Worker
+  Owner
+}
+
+type UserSocialMedia {
+  smName String
+  smURL  String
+}
+
+type Avatar {
+  avatarURL     String
+  avatarURLName String
+}
+
+type Location {
+  lat  Float
+  long Float
+}
+
+type UserT {
+  userID          String
+  userEmail       String
+  userPassword    String
+  userName        String
+  userAge         Int               @default(0)
+  userDesc        String
+  userType        String
+  userSocialMedia UserSocialMedia[]
+  userRole        String
+  userExp         String
+  userAvatar      Avatar
+  userCreatedAt   DateTime          @default(now())
+  userUpdatedAt   DateTime          @default(now())
+}
+
+model User {
+  userID          String            @id @default(auto()) @map("_id") @db.ObjectId
+  userEmail       String            @unique
+  userPassword    String
+  userName        String            @unique
+  userAge         Int               @default(0)
+  userDesc        String
+  userType        String
+  userSocialMedia UserSocialMedia[]
+  userRole        String
+  userExp         String
+  userAvatar      Avatar
+  userCreatedAt   DateTime          @default(now())
+  userUpdatedAt   DateTime          @default(now())
+  userMachine     Machine[]
+  userJob         Job[]
+  userCrop        Crop[]
+  userField       Field[]
+  Forum           Forum[]
+  Team            Team[]
+}
+
+model Job {
+  jobID         String   @id @default(auto()) @map("_id") @db.ObjectId
+  jobName       String
+  jobType       String
+  jobDate       String
+  jobDesc       String
+  jobMembers    UserT[]
+  jobMachinesID String[] @default([])
+  jobPriority   String
+  jobOwner      User     @relation(fields: [jobOwnerID], references: [userID])
+  jobOwnerID    String   @db.ObjectId
+  jobField      Field    @relation(fields: [jobFieldID], references: [fieldID])
+  jobFieldID    String   @db.ObjectId
+}
+
+model Machine {
+  machineID      String   @id @default(auto()) @map("_id") @db.ObjectId
+  machineName    String
+  machineImage   Avatar
+  machineDesc    String
+  machineStatus  Boolean
+  machinePICsID  String[] @default([])
+  machineOwner   User     @relation(fields: [machineOwnerID], references: [userID])
+  machineOwnerID String   @db.ObjectId
+}
+
+model Crop {
+  cropID         String   @id @default(auto()) @map("_id") @db.ObjectId
+  cropImage      Avatar
+  cropCA         String
+  cropDate       DateTime @default(now())
+  cropDisease    String
+  cropNutrient   String
+  cropPrecaution String
+  cropOwner      User     @relation(fields: [cropOwnerID], references: [userID])
+  cropOwnerID    String   @db.ObjectId
+}
+
+model Field {
+  fieldID       String          @id @default(auto()) @map("_id") @db.ObjectId
+  fieldName     String
+  fieldCA       String
+  fieldPCT      String
+  fieldSeedDate String
+  fieldST       SoilTemperature
+  fieldSM       SoilMoisture
+  fieldOwner    User            @relation(fields: [fieldOwnerID], references: [userID])
+  fieldOwnerID  String          @db.ObjectId
+  fieldLocation Location[]
+  Job           Job[]
+}
+
+type SoilTemperature {
+  stPrev     Float[]    @default([])
+  stTime     Float[]    @default([])
+  stCurrent  Float      @default(0.20)
+  stLocation Location[]
+}
+
+type SoilMoisture {
+  smPrev     Float[]    @default([])
+  smTime     Float[]    @default([])
+  smCurrent  Float      @default(0.20)
+  smLocation Location[]
+}
+
+model Forum {
+  forumID       String   @id @default(auto()) @map("_id") @db.ObjectId
+  forumContent  String
+  forumBy       User     @relation(fields: [forumByID], references: [userID])
+  forumByID     String   @db.ObjectId
+  forumAt       DateTime @default(now())
+  forumLocation String
+}
+
+model Team {
+  teamID        String   @id @default(auto()) @map("_id") @db.ObjectId
+  teamName      String
+  teamByID      String   @db.ObjectId
+  teamBy        User     @relation(fields: [teamByID], references: [userID])
+  teamMember    UserT[]
+  teamCreatedAt DateTime @default(now())
+  teamUpdatedAt DateTime @default(now())
+}
