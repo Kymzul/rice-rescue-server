@@ -12,7 +12,7 @@ app.use('/api', rootRoute);
 
 app.get('/', (req: Request, res: Response) => {
     res.status(200).json({
-        'message': 'Success',
+        'message': 'Success Connect Hello World',
         'data': 'Hello World'
     });
 })

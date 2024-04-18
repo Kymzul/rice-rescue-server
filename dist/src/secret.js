@@ -7,4 +7,5 @@ exports.JWT_SECRET = exports.PORT = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config({ path: '.env' });
 exports.PORT = process.env.PORT;
-exports.JWT_SECRET = process.env.JWT_SECRET;
+//export const JWT_SECRET = process.env.JWT_SECRET!
+exports.JWT_SECRET = 'HAFJKHFSKDFKHSDMFKSHFQJHKWADSJASKDJHASKHDAKSHD';
