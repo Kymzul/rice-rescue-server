@@ -8,6 +8,8 @@
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/aimeos/aimeos-typo3/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/aimeos/aimeos-typo3/?branch=master)
 [![License](https://poser.pugx.org/aimeos/aimeos-typo3/license.svg)](https://packagist.org/packages/aimeos/aimeos-typo3)
 
+## Our server: https://github.com/Kymzul/rice-rescue-server
+
 # Welcome to Rice Rescue 🌾
 
 :star: Star us on GitHub — it motivates us a lot!
