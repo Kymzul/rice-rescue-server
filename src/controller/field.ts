@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 import prisma from "../../prisma";
-import { TField, TLocation, TSoilTemperature } from "../types";
+import { TField, TLocation, TSoilMoisture, TSoilTemperature } from "../types";
 import { v4 as uuid } from 'uuid';
 import { PrismaClient } from "@prisma/client";
 
@@ -44,7 +44,7 @@ export const getSingleField = async (req: Request, res: Response) => {
 export const postField = async (req: Request, res: Response) => {
 
     try {
-        const { fieldName, fieldCA, fieldOwnerID, fieldPCT, fieldSeedDate, fieldLocation } = req.body;
+        const { fieldName, fieldCA, fieldOwnerID, fieldPCT, fieldSeedDate, fieldLocation, } = req.body;
 
         const fieldExist = await prisma.field.findFirst({
             where: {
@@ -122,9 +122,7 @@ export const deleteField = async (req: Request, res: Response) => {
 export const updateField = async (req: Request, res: Response) => {
     const { fieldID } = req.params;
     try {
-        const { fieldST } = req.body;
-
-        const soilTemp = fieldST as TSoilTemperature;
+        const { fieldST, fieldSM } = req.body;
 
         const isExist = await prisma.field.findUnique({
             where: {
@@ -141,7 +139,8 @@ export const updateField = async (req: Request, res: Response) => {
                 fieldID
             },
             data: {
-                fieldST
+                fieldST,
+                fieldSM
             }
         })
 
