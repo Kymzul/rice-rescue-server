@@ -25,36 +25,35 @@ export const signup = async (req: Request, res: Response) => {
     try {
         const hashedPassword = hashSync(userPassword, 10);
 
-        if (!userEmail || !userPassword) {
-            return res.status(403).json({ 'message': 'Uncompleted Filled' });
-        }
-
         const isExist = await prisma.user.findFirst({ where: { userEmail: userEmail } });
 
         if (isExist) {
-            return res.status(403).json({ 'message': 'Email already exist' });
+            return res.status(403).json({ data: { message: 'Email already exist', status: 403 } });
+        } else {
+            const user = await prisma.user.create({
+                data: {
+                    userEmail,
+                    userPassword: hashedPassword,
+                    userName,
+                    userAge,
+                    userDesc,
+                    userType,
+                    userSocialMedia,
+                    userRole,
+                    userAvatar,
+                    userExp
+                }
+            });
+
+            const token = jwt.sign({ userID: user.userID }, JWT_SECRET);
+
+            return res.status(201).json({ data: { message: 'Successfully Register', status: 201 }, token: token });
+
         }
-
-        const newUser = await prisma.user.create({
-            data: {
-                userEmail,
-                userPassword: hashedPassword,
-                userName,
-                userAge,
-                userDesc,
-                userType,
-                userSocialMedia,
-                userRole,
-                userAvatar,
-                userExp
-            }
-        });
-
-        return res.status(200).json({ 'message': 'Successfully Register', newUser });
 
     } catch (e) {
         console.log(e);
-        return res.status(500).json({ 'message': 'Internal Server Error: ' + e });
+        return res.status(500).json({ data: { message: 'Internal Server Error: ' + e, status: 500 } });
     }
 }
 
@@ -63,18 +62,18 @@ export const signin = async (req: Request, res: Response) => {
 
     try {
         if (!userEmail || !userPassword) {
-            return res.status(403).json({ message: 'Uncompleted Filled' });
+            return res.status(403).json({ message: 'Uncompleted Filled', status: 403 });
         }
         console.log(userEmail);
 
         const findUser = await prisma.user.findUnique({ where: { userEmail: userEmail } });
 
         if (!findUser) {
-            return res.status(404).json({ message: 'Email not found' });
+            return res.status(404).json({ message: 'Email not found', status: 404 });
 
         }
         if (!compareSync(userPassword, findUser.userPassword)) {
-            return res.status(401).json({ 'message': 'Password not matched' });
+            return res.status(401).json({ 'message': 'Password not matched', status: 401 });
         }
 
         const token = jwt.sign({ userID: findUser.userID }, JWT_SECRET);

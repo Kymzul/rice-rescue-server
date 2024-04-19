@@ -49,32 +49,32 @@ const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     };
     try {
         const hashedPassword = (0, bcrypt_1.hashSync)(userPassword, 10);
-        if (!userEmail || !userPassword) {
-            return res.status(403).json({ 'message': 'Uncompleted Filled' });
-        }
         const isExist = yield prisma_1.default.user.findFirst({ where: { userEmail: userEmail } });
         if (isExist) {
-            return res.status(403).json({ 'message': 'Email already exist' });
+            return res.status(403).json({ data: { message: 'Email already exist', status: 403 } });
         }
-        const newUser = yield prisma_1.default.user.create({
-            data: {
-                userEmail,
-                userPassword: hashedPassword,
-                userName,
-                userAge,
-                userDesc,
-                userType,
-                userSocialMedia,
-                userRole,
-                userAvatar,
-                userExp
-            }
-        });
-        return res.status(200).json({ 'message': 'Successfully Register', newUser });
+        else {
+            const user = yield prisma_1.default.user.create({
+                data: {
+                    userEmail,
+                    userPassword: hashedPassword,
+                    userName,
+                    userAge,
+                    userDesc,
+                    userType,
+                    userSocialMedia,
+                    userRole,
+                    userAvatar,
+                    userExp
+                }
+            });
+            const token = jwt.sign({ userID: user.userID }, secret_1.JWT_SECRET);
+            return res.status(201).json({ data: { message: 'Successfully Register', status: 201 }, token: token });
+        }
     }
     catch (e) {
         console.log(e);
-        return res.status(500).json({ 'message': 'Internal Server Error: ' + e });
+        return res.status(500).json({ data: { message: 'Internal Server Error: ' + e, status: 500 } });
     }
 });
 exports.signup = signup;
@@ -82,15 +82,15 @@ const signin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { userEmail, userPassword } = req.body;
     try {
         if (!userEmail || !userPassword) {
-            return res.status(403).json({ message: 'Uncompleted Filled' });
+            return res.status(403).json({ message: 'Uncompleted Filled', status: 403 });
         }
         console.log(userEmail);
         const findUser = yield prisma_1.default.user.findUnique({ where: { userEmail: userEmail } });
         if (!findUser) {
-            return res.status(404).json({ message: 'Email not found' });
+            return res.status(404).json({ message: 'Email not found', status: 404 });
         }
         if (!(0, bcrypt_1.compareSync)(userPassword, findUser.userPassword)) {
-            return res.status(401).json({ 'message': 'Password not matched' });
+            return res.status(401).json({ 'message': 'Password not matched', status: 401 });
         }
         const token = jwt.sign({ userID: findUser.userID }, secret_1.JWT_SECRET);
         return res.status(200).json({ message: 'Successfully Login', token: token });

@@ -11,7 +11,7 @@ app.use(express_1.default.json());
 app.use('/api', routes_1.default);
 app.get('/', (req, res) => {
     res.status(200).json({
-        'message': 'Success Connect',
+        'message': 'Success Connect Hello World',
         'data': 'Hello World'
     });
 });
